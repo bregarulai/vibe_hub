@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import React, { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { signUpSchema, SignUpValues } from "@/lib/validation";
 import {
   Form,
   FormControl,
@@ -14,33 +13,32 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signUpAction } from "@/server/actions/auth.action";
-import { PasswordInput } from "@/components/shared/PasswordInput";
+import { signInSchema, SignInValues } from "@/lib/validation";
 import LoadingButton from "@/components/shared/LoadingButton";
+import { PasswordInput } from "../shared/PasswordInput";
+import { signInAction } from "@/server/actions/auth.action";
 
-const SignUpForm = () => {
+const SignInForm = () => {
   const [error, setError] = useState<string>();
 
-  // Takes into account redirect in server action after sign up
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<SignUpValues>({
-    resolver: zodResolver(signUpSchema),
+  const form = useForm<SignInValues>({
+    resolver: zodResolver(signInSchema),
     defaultValues: {
-      email: "",
       username: "",
       password: "",
     },
   });
 
-  const onSubmit = async (values: SignUpValues) => {
+  const onSubmit = async (values: SignInValues) => {
     setError(undefined);
+
     startTransition(async () => {
-      const { error } = await signUpAction(values);
+      const { error } = await signInAction(values);
       if (error) setError(error);
     });
   };
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
@@ -53,19 +51,6 @@ const SignUpForm = () => {
               <FormLabel>Username</FormLabel>
               <FormControl>
                 <Input placeholder="Username" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="Email" {...field} type="email" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -93,4 +78,4 @@ const SignUpForm = () => {
   );
 };
 
-export default SignUpForm;
+export default SignInForm;
