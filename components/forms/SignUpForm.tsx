@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { set } from "zod";
+import { signUpAction } from "@/server/actions/auth.action";
 
 const SignUpForm = () => {
   const [error, setError] = useState<string>();
@@ -34,11 +35,16 @@ const SignUpForm = () => {
 
   const onSubmit = async (values: SignUpValues) => {
     setError(undefined);
+    startTransition(async () => {
+      const { error } = await signUpAction(values);
+      if (error) setError(error);
+    });
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+        {!!error && <p className="text-center text-destructive">{error}</p>}
         <FormField
           control={form.control}
           name="username"
