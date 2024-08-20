@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { signInSchema, SignInValues } from "@/lib/validation";
 import LoadingButton from "@/components/shared/LoadingButton";
-import { PasswordInput } from "../shared/PasswordInput";
+import { PasswordInput } from "@/components/shared/PasswordInput";
 import { signInAction } from "@/server/actions/auth.action";
 
 const SignInForm = () => {
@@ -34,6 +34,7 @@ const SignInForm = () => {
   const onSubmit = async (values: SignInValues) => {
     setError(undefined);
 
+    // Takes into account redirect in server action after sign in
     startTransition(async () => {
       const { error } = await signInAction(values);
       if (error) setError(error);
@@ -71,7 +72,7 @@ const SignInForm = () => {
         />
 
         <LoadingButton type="submit" className="w-full" loading={isPending}>
-          Create Account
+          Sign In
         </LoadingButton>
       </form>
     </Form>
