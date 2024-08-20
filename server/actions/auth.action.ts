@@ -18,7 +18,7 @@ import {
   getUserByEmail,
   getUserByUsername,
 } from "@/server/repositories/auth.repository";
-import { lucia } from "@/lucia/auth";
+import { lucia, validateRequest } from "@/lucia/auth";
 
 export const signUpAction = async (
   credentials: SignUpValues,
@@ -99,4 +99,23 @@ export const signInAction = async (
     console.error(error);
     return { error: "Something went wrong.  Please try again." };
   }
+};
+
+export const signOutAction = async () => {
+  const { session } = await validateRequest();
+
+  if (!session) {
+    throw new Error("Unauhthorized");
+  }
+
+  await lucia.invalidateSession(session.id);
+
+  const sessionCookie = lucia.createBlankSessionCookie();
+  cookies().set(
+    sessionCookie.name,
+    sessionCookie.value,
+    sessionCookie.attributes,
+  );
+
+  return redirect("/sign-in");
 };
