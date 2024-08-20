@@ -16,9 +16,9 @@ export const signUpSchema = z.object({
 
 export type SignUpValues = z.infer<typeof signUpSchema>;
 
-export const signinSchema = z.object({
+export const signInSchema = z.object({
   username: requiredString,
   password: requiredString,
 });
 
-export type SigninValues = z.infer<typeof signinSchema>;
+export type SignInValues = z.infer<typeof signInSchema>;
