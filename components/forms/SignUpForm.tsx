@@ -15,8 +15,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { set } from "zod";
 import { signUpAction } from "@/server/actions/auth.action";
+import { PasswordInput } from "@/components/shared/PasswordInput";
 
 const SignUpForm = () => {
   const [error, setError] = useState<string>();
@@ -78,7 +78,7 @@ const SignUpForm = () => {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input placeholder="Password" {...field} type="password" />
+                <PasswordInput placeholder="Password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
