@@ -4,8 +4,15 @@ import { hash } from "@node-rs/argon2";
 import { generateIdFromEntropySize } from "lucia";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { isRedirectError } from "next/dist/client/components/redirect";
+import { verify } from "@node-rs/argon2";
 
-import { signUpSchema, SignUpValues } from "@/lib/validation";
+import {
+  signInSchema,
+  SignInValues,
+  signUpSchema,
+  SignUpValues,
+} from "@/lib/validation";
 import {
   createUser,
   getUserByEmail,
@@ -50,7 +57,46 @@ export const signUpAction = async (
 
     return redirect("/");
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.error(error);
-    return { error: "Something went wrong" };
+    return { error: "Something went wrong.  Please try again." };
+  }
+};
+
+export const signInAction = async (
+  credentials: SignInValues,
+): Promise<{ error: string }> => {
+  try {
+    const { username, password } = signInSchema.parse(credentials);
+
+    const existingUser = await getUserByUsername(username);
+
+    if (!existingUser || !existingUser.passwordHash) {
+      return { error: "Username or password is incorrect" };
+    }
+
+    const validPassword = await verify(existingUser.passwordHash, password, {
+      memoryCost: 19456,
+      timeCost: 2,
+      parallelism: 1,
+    });
+
+    if (!validPassword) {
+      return { error: "Username or password is incorrect" };
+    }
+
+    const session = await lucia.createSession(existingUser.id, {});
+    const sessionCookie = lucia.createSessionCookie(session.id);
+    cookies().set(
+      sessionCookie.name,
+      sessionCookie.value,
+      sessionCookie.attributes,
+    );
+
+    return redirect("/");
+  } catch (error) {
+    if (isRedirectError(error)) throw error;
+    console.error(error);
+    return { error: "Something went wrong.  Please try again." };
   }
 };

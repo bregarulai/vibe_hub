@@ -1,7 +1,5 @@
 "use server";
 
-import { User } from "lucia";
-
 import prisma from "@/lib/prisma";
 
 type CreateUserParams = {
@@ -11,9 +9,7 @@ type CreateUserParams = {
   hashedPassword: string;
 };
 
-export const getUserByUsername = async (
-  username: string,
-): Promise<User | null> => {
+export const getUserByUsername = async (username: string) => {
   const user = await prisma.user.findFirst({
     where: {
       username: {
@@ -26,7 +22,7 @@ export const getUserByUsername = async (
   return user;
 };
 
-export const getUserByEmail = async (email: string): Promise<User | null> => {
+export const getUserByEmail = async (email: string) => {
   const user = await prisma.user.findFirst({
     where: {
       email: {
