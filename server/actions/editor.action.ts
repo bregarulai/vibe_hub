@@ -1,7 +1,5 @@
 "use server";
 
-import { z } from "zod";
-
 import { createPostSchema } from "@/lib/validation";
 import { validateRequest } from "@/lucia/auth";
 import { createPost } from "@/server/repositories/editor.repository";
