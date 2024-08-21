@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import UserButton from "@/components/UserButton";
+import SearchField from "@/components/shared/SearchField";
 
 const Navbar = () => {
   return (
@@ -9,7 +10,8 @@ const Navbar = () => {
         <Link href="/" className="text-2xl font-bold text-primary">
           VibeHub
         </Link>
-        <UserButton />
+        <SearchField />
+        <UserButton className="sm:ms-auto" />
       </div>
     </header>
   );
