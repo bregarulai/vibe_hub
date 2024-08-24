@@ -24,3 +24,25 @@ export const getForYouPosts = async ({
     return [];
   }
 };
+
+export const getPostById = async (id: string) => {
+  try {
+    const post = await prisma.post.findUnique({
+      where: { id },
+    });
+
+    return post;
+  } catch (error) {
+    console.error(`Error getting post by id: ${error}`);
+  }
+};
+
+export const deletePost = async (id: string) => {
+  try {
+    await prisma.post.delete({
+      where: { id },
+    });
+  } catch (error) {
+    console.error(`Error deleting post: ${error}`);
+  }
+};
