@@ -8,6 +8,7 @@ import { FOR_YOU, POST_FEED } from "@/lib/constants";
 import Post from "@/components/posts/Post";
 import kyInstance from "@/lib/ky";
 import { Button } from "@/components/ui/button";
+import InfiniteScrollContainer from "./shared/InfiniteScrollContainer";
 
 const ForYouFeed = () => {
   const {
@@ -45,12 +46,15 @@ const ForYouFeed = () => {
   }
 
   return (
-    <div className="space-y-5">
+    <InfiniteScrollContainer
+      onBottomReached={() => hasNextPage && !isFetching && fetchNextPage()}
+      className="space-y-5"
+    >
       {posts.map((post) => (
         <Post key={post.id} post={post} />
       ))}
-      <Button onClick={() => fetchNextPage()}>Load More</Button>
-    </div>
+      {isFetchingNextPage && <Loader2 className="mx-auto my-3 animate-spin" />}
+    </InfiniteScrollContainer>
   );
 };
 
