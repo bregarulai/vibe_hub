@@ -12,7 +12,9 @@ export const createPostAction = async (input: string) => {
   const { content } = createPostSchema.parse({ content: input });
 
   try {
-    await createPost({ content, userId: user.id });
+    const newPost = await createPost({ content, userId: user.id });
+
+    return newPost;
   } catch (error) {
     console.error(`Error submitting post: ${error}`);
     throw new Error("Failed to submit post");

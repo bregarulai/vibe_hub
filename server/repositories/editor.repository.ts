@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { postDataInclude } from "@/lib/type";
 
 type CreatePostParams = {
   content: string;
@@ -9,12 +10,15 @@ type CreatePostParams = {
 
 export const createPost = async ({ content, userId }: CreatePostParams) => {
   try {
-    await prisma.post.create({
+    const newPost = await prisma.post.create({
       data: {
         content,
         userId,
       },
+      include: postDataInclude,
     });
+
+    return newPost;
   } catch (error) {
     console.error(`Error creating post: ${error}`);
     throw new Error("Failed to create post");
