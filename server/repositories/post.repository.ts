@@ -39,9 +39,12 @@ export const getPostById = async (id: string) => {
 
 export const deletePost = async (id: string) => {
   try {
-    await prisma.post.delete({
+    const deletedPost = await prisma.post.delete({
       where: { id },
+      include: postDataInclude,
     });
+
+    return deletedPost;
   } catch (error) {
     console.error(`Error deleting post: ${error}`);
   }

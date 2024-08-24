@@ -14,5 +14,7 @@ export const deletePostAction = async (id: string) => {
 
   if (post.userId !== user.id) throw new Error("Unauthorized");
 
-  await deletePost(id);
+  const deletedPost = await deletePost(id);
+
+  return deletedPost;
 };
