@@ -7,7 +7,7 @@ import { PostsPage } from "@/lib/type";
 import { FOR_YOU, POST_FEED } from "@/lib/constants";
 import Post from "@/components/posts/Post";
 import kyInstance from "@/lib/ky";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 
 const ForYouFeed = () => {
   const {
