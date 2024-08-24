@@ -44,6 +44,13 @@ export const useSubmitPostMutation = () => {
         },
       );
 
+      queryClient.invalidateQueries({
+        queryKey: queryFilter.queryKey,
+        predicate(query) {
+          return !query.state.data;
+        },
+      });
+
       toast({
         description: "Your post has been successfully created!",
       });
