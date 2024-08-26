@@ -13,6 +13,7 @@ import FollowerCount from "@/components/shared/FollowerCount";
 import { Button } from "@/components/ui/button";
 import FollowButton from "@/components/FollowButton";
 import { Separator } from "@/components/ui/separator";
+import UserPostsFeed from "@/components/UserPostsFeed";
 
 type ProfilePageProps = {
   params: { username: string };
@@ -61,6 +62,12 @@ const ProfilePage = async ({ params: { username } }: ProfilePageProps) => {
     <main className="flex w-full min-w-0 gap-5">
       <div className="min-w-0, w-full space-y-5">
         <UserProfile user={user} loggedInUserId={loggedInUser.id} />
+        <div className="rounded-2xl bg-card p-5 shadow-sm">
+          <h2 className="text-center text-2xl font-bold">
+            {user.displayName}&apos;s Posts
+          </h2>
+        </div>
+        <UserPostsFeed userId={user.id} />
       </div>
       <TrendsSidebar />
     </main>
