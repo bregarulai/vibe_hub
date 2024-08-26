@@ -29,3 +29,24 @@ export const createFollower = async ({
     console.error(`Error creating follower: ${error}`);
   }
 };
+
+type DeleteFollowerParams = {
+  userId: string;
+  followerId: string;
+};
+
+export const deleteFollower = async ({
+  userId,
+  followerId,
+}: DeleteFollowerParams) => {
+  try {
+    await prisma.follow.deleteMany({
+      where: {
+        followerId: followerId,
+        followingId: userId,
+      },
+    });
+  } catch (error) {
+    console.error(`Error deleting follower: ${error}`);
+  }
+};
