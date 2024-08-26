@@ -1,18 +1,20 @@
 import prisma from "@/lib/prisma";
-import { postDataInclude } from "@/lib/type";
+import { getPostDataInclude } from "@/lib/type";
 
 type GetForYouPostsParams = {
   pageSize: number;
   cursor: string | undefined;
+  userId: string;
 };
 
 export const getForYouPosts = async ({
   pageSize,
   cursor,
+  userId,
 }: GetForYouPostsParams) => {
   try {
     const posts = await prisma.post.findMany({
-      include: postDataInclude,
+      include: getPostDataInclude(userId),
       orderBy: { createdAt: "desc" },
       take: pageSize + 1,
       cursor: cursor ? { id: cursor } : undefined,
@@ -41,7 +43,7 @@ export const deletePost = async (id: string) => {
   try {
     const deletedPost = await prisma.post.delete({
       where: { id },
-      include: postDataInclude,
+      include: getPostDataInclude(id),
     });
 
     return deletedPost;

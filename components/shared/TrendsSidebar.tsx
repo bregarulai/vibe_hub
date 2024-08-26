@@ -9,8 +9,8 @@ import {
   getWhoToFollow,
 } from "@/server/repositories/user.repository";
 import UserAvatar from "@/components/shared/UserAvatar";
-import { Button } from "@/components/ui/button";
 import { formatNumber } from "@/lib/utils";
+import FollowButton from "@/components/FollowButton";
 
 const TrendsSidebar = () => {
   return (
@@ -51,7 +51,15 @@ async function WhoToFollow() {
               </p>
             </div>
           </Link>
-          <Button>Follow</Button>
+          <FollowButton
+            userId={user.id}
+            initialState={{
+              followers: user._count.followers,
+              isFollowedByUser: user.followers.some(
+                ({ followerId }) => followerId === user.id,
+              ),
+            }}
+          />
         </div>
       ))}
     </div>

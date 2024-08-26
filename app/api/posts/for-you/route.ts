@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
 
     if (!user) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
-    const posts = await getForYouPosts({ pageSize, cursor });
+    const posts = await getForYouPosts({ pageSize, cursor, userId: user.id });
 
     const nextCursor = posts.length > pageSize ? posts[pageSize].id : null;
 

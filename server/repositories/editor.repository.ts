@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { postDataInclude } from "@/lib/type";
+import { getPostDataInclude } from "@/lib/type";
 
 type CreatePostParams = {
   content: string;
@@ -15,7 +15,7 @@ export const createPost = async ({ content, userId }: CreatePostParams) => {
         content,
         userId,
       },
-      include: postDataInclude,
+      include: getPostDataInclude(userId),
     });
 
     return newPost;

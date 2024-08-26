@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { userDataSelect } from "@/lib/type";
+import { getUserDataSelect } from "@/lib/type";
 
 type getFollowersParams = {
   userId: string;
@@ -45,8 +45,13 @@ export const getWhoToFollow = async (id: string) => {
         NOT: {
           id: id,
         },
+        followers: {
+          none: {
+            followerId: id,
+          },
+        },
       },
-      select: userDataSelect,
+      select: getUserDataSelect(id),
       take: 5,
     });
     return usersToFollow;
