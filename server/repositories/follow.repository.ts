@@ -4,23 +4,23 @@ import prisma from "@/lib/prisma";
 
 type CreateFollowerParams = {
   userId: string;
-  followerId: string;
+  loggedInUserId: string;
 };
 
 export const createFollower = async ({
   userId,
-  followerId,
+  loggedInUserId,
 }: CreateFollowerParams) => {
   try {
     await prisma.follow.upsert({
       where: {
         followerId_followingId: {
-          followerId,
+          followerId: loggedInUserId,
           followingId: userId,
         },
       },
       create: {
-        followerId,
+        followerId: loggedInUserId,
         followingId: userId,
       },
       update: {},

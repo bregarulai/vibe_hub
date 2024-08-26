@@ -26,6 +26,8 @@ export async function GET(req: NextRequest) {
       posts: posts.slice(0, pageSize),
       nextCursor,
     };
+
+    return Response.json(data);
   } catch (error) {
     console.error(`Error while fetching posts following. Error: ${error}`);
     return Response.json({ error: "Internal Server Error" }, { status: 500 });

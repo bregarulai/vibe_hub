@@ -48,7 +48,7 @@ export async function POST(
 
     await createFollower({
       userId,
-      followerId: loggedInUser.id,
+      loggedInUserId: loggedInUser.id,
     });
 
     return new Response(null, { status: 204 });
