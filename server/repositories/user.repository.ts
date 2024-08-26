@@ -3,6 +3,41 @@
 import prisma from "@/lib/prisma";
 import { userDataSelect } from "@/lib/type";
 
+type getFollowersParams = {
+  userId: string;
+  loggingInUserId: string;
+};
+
+export const getFollowers = async ({
+  userId,
+  loggingInUserId,
+}: getFollowersParams) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        followers: {
+          where: {
+            followerId: loggingInUserId,
+          },
+          select: {
+            followerId: true,
+          },
+        },
+        _count: {
+          select: {
+            followers: true,
+          },
+        },
+      },
+    });
+
+    return user;
+  } catch (error) {
+    console.error(`Error getting user by id: ${error}`);
+  }
+};
+
 export const getWhoToFollow = async (id: string) => {
   try {
     const usersToFollow = await prisma.user.findMany({
