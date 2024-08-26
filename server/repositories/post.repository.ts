@@ -7,6 +7,12 @@ type GetForYouPostsParams = {
   userId: string;
 };
 
+type GetFollowingPostsParams = {
+  pageSize: number;
+  cursor: string | undefined;
+  userId: string;
+};
+
 export const getForYouPosts = async ({
   pageSize,
   cursor,
@@ -23,6 +29,35 @@ export const getForYouPosts = async ({
     return posts;
   } catch (error) {
     console.error(`Error getting for you posts: ${error}`);
+    return [];
+  }
+};
+
+export const getFollowingPosts = async ({
+  pageSize,
+  cursor,
+  userId,
+}: GetFollowingPostsParams) => {
+  try {
+    const posts = await prisma.post.findMany({
+      where: {
+        user: {
+          followers: {
+            some: {
+              followerId: userId,
+            },
+          },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+      take: pageSize + 1,
+      cursor: cursor ? { id: cursor } : undefined,
+      include: getPostDataInclude(userId),
+    });
+
+    return posts;
+  } catch (error) {
+    console.error(`Error getting following posts: ${error}`);
     return [];
   }
 };
