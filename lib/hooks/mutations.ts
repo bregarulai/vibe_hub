@@ -10,19 +10,31 @@ import { usePathname, useRouter } from "next/navigation";
 
 import { useToast } from "@/components/ui/use-toast";
 import { createPostAction } from "@/server/actions/editor.action";
-import { FOR_YOU, POST_FEED } from "@/lib/constants";
+import { FOR_YOU, POST_FEED, USER_POSTS } from "@/lib/constants";
 import { PostData, PostsPage } from "@/lib/type";
 import { deletePostAction } from "@/server/actions/post.action";
+import { useSession } from "@/providers/SessionProvider";
 
 export const useSubmitPostMutation = () => {
   const { toast } = useToast();
 
   const queryClient = useQueryClient();
 
+  const { user } = useSession();
+
   const mutation = useMutation({
     mutationFn: createPostAction,
     onSuccess: async (newPost) => {
-      const queryFilter: QueryFilters = { queryKey: [POST_FEED, FOR_YOU] };
+      const queryFilter = {
+        queryKey: [POST_FEED],
+        predicate(query) {
+          return (
+            query.queryKey.includes(FOR_YOU) ||
+            (query.queryKey.includes(USER_POSTS) &&
+              query.queryKey.includes(user.id))
+          );
+        },
+      } satisfies QueryFilters;
 
       await queryClient.cancelQueries(queryFilter);
 
@@ -49,7 +61,7 @@ export const useSubmitPostMutation = () => {
       queryClient.invalidateQueries({
         queryKey: queryFilter.queryKey,
         predicate(query) {
-          return !query.state.data;
+          return queryFilter.predicate(query) && !query.state.data;
         },
       });
 
