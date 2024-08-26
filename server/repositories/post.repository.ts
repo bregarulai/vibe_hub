@@ -13,6 +13,13 @@ type GetFollowingPostsParams = {
   userId: string;
 };
 
+type GetUserProfilePostsParams = {
+  pageSize: number;
+  cursor: string | undefined;
+  profilePageUserId: string;
+  loggedInUserId: string;
+};
+
 export const getForYouPosts = async ({
   pageSize,
   cursor,
@@ -29,6 +36,28 @@ export const getForYouPosts = async ({
     return posts;
   } catch (error) {
     console.error(`Error getting for you posts: ${error}`);
+    return [];
+  }
+};
+
+export const getUserProfilePosts = async ({
+  pageSize,
+  cursor,
+  profilePageUserId,
+  loggedInUserId,
+}: GetUserProfilePostsParams) => {
+  try {
+    const posts = await prisma.post.findMany({
+      where: { userId: profilePageUserId },
+      include: getPostDataInclude(loggedInUserId),
+      orderBy: { createdAt: "desc" },
+      take: pageSize + 1,
+      cursor: cursor ? { id: cursor } : undefined,
+    });
+
+    return posts;
+  } catch (error) {
+    console.error(`Error getting user profile posts: ${error}`);
     return [];
   }
 };
