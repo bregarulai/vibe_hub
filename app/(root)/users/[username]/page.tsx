@@ -9,6 +9,10 @@ import { validateRequest } from "@/lucia/auth";
 import TrendsSidebar from "@/components/shared/TrendsSidebar";
 import UserAvatar from "@/components/shared/UserAvatar";
 import { formatNumber } from "@/lib/utils";
+import FollowerCount from "@/components/shared/FollowerCount";
+import { Button } from "@/components/ui/button";
+import FollowButton from "@/components/FollowButton";
+import { Separator } from "@/components/ui/separator";
 
 type ProfilePageProps = {
   params: { username: string };
@@ -99,9 +103,23 @@ async function UserProfile({ user, loggedInUserId }: UserProfileProps) {
                 {formatNumber(user._count.posts)}
               </span>
             </span>
+            <FollowerCount userId={user.id} initialState={followerInfo} />
           </div>
         </div>
+        {user.id === loggedInUserId ? (
+          <Button>Edit Profile</Button>
+        ) : (
+          <FollowButton userId={user.id} initialState={followerInfo} />
+        )}
       </div>
+      {user.bio && (
+        <>
+          <Separator />
+          <div className="overflow-hidden whitespace-pre-line break-words">
+            {user.bio}
+          </div>
+        </>
+      )}
     </div>
   );
 }
