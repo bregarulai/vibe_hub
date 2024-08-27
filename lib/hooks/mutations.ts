@@ -14,6 +14,9 @@ import { FOR_YOU, POST_FEED, USER_POSTS } from "@/lib/constants";
 import { PostData, PostsPage } from "@/lib/type";
 import { deletePostAction } from "@/server/actions/post.action";
 import { useSession } from "@/providers/SessionProvider";
+import { useUploadThing } from "@/lib/uploadthing";
+import { UpdateUserProfileValues } from "@/lib/validation";
+import { updateUserProfileAction } from "@/server/actions/user.action";
 
 export const useSubmitPostMutation = () => {
   const { toast } = useToast();
@@ -131,4 +134,64 @@ export const useDeletePostMutation = () => {
   });
 
   return mutation;
+};
+
+export const useUpdateUserProfileMutation = () => {
+  const { toast } = useToast();
+
+  const router = useRouter();
+
+  const queryClient = useQueryClient();
+
+  const { startUpload: startAvatarUpload } = useUploadThing("avatar");
+
+  const mutation = useMutation({
+    mutationFn: async ({
+      values,
+      avatar,
+    }: {
+      values: UpdateUserProfileValues;
+      avatar?: File;
+    }) => {
+      return Promise.all([
+        updateUserProfileAction(values),
+        avatar && startAvatarUpload([avatar]),
+      ]);
+    },
+    onSuccess: async ([updatedUser, uploadResult]) => {
+      const newAvatarUrl = uploadResult?.[0].serverData.avatarUrl;
+
+      const queryFilter: QueryFilters = {
+        queryKey: [POST_FEED],
+      };
+
+      await queryClient.cancelQueries(queryFilter);
+
+      queryClient.setQueriesData<InfiniteData<PostsPage, string | null>>(
+        queryFilter,
+        (oldData) => {
+          if (!oldData) return;
+
+          return {
+            pageParams: oldData.pageParams,
+            pages: oldData.pages.map((page) => ({
+              nextCursor: page.nextCursor,
+              posts: page.posts.map((post) => {
+                if (post.user.id === updatedUser?.id) {
+                  return {
+                    ...post,
+                    user: {
+                      ...updatedUser,
+                      avatarUrl: newAvatarUrl || updatedUser.avatarUrl,
+                    },
+                  };
+                }
+                return post;
+              }),
+            })),
+          };
+        },
+      );
+    },
+  });
 };
