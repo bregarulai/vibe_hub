@@ -79,3 +79,28 @@ export const getTrendingTopics = async () => {
     return [];
   }
 };
+
+export const getUserByUsernameWithData = async ({
+  username,
+  loggedInUserId,
+}: {
+  username: string;
+  loggedInUserId: string;
+}) => {
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        username: {
+          equals: username,
+          mode: "insensitive",
+        },
+      },
+      select: getUserDataSelect(loggedInUserId),
+    });
+
+    return user;
+  } catch (error) {
+    console.error(`Error getting user by username: ${error}`);
+    return null;
+  }
+};
