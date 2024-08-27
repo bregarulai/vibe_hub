@@ -7,6 +7,7 @@ import UserAvatar from "@/components/shared/UserAvatar";
 import { formatRelativeDate } from "@/lib/utils";
 import { useSession } from "@/providers/SessionProvider";
 import PostMoreButton from "@/components/posts/PostMoreButton";
+import Linkify from "@/components/shared/Linkify";
 
 type PostProps = {
   post: PostData;
@@ -44,7 +45,9 @@ const Post = ({ post }: PostProps) => {
           />
         )}
       </div>
-      <div className="whitespace-pre-line break-words">{post.content}</div>
+      <Linkify>
+        <div className="whitespace-pre-line break-words">{post.content}</div>
+      </Linkify>
     </article>
   );
 };

@@ -6,20 +6,20 @@ type LinkifyProps = {
 };
 
 const Linkify = ({ children }: LinkifyProps) => {
-  return <LinkifyUrl>{children}</LinkifyUrl>;
+  return (
+    <LinkifyUsername>
+      <LinkifyHashtag>
+        <LinkifyUrl>{children}</LinkifyUrl>
+      </LinkifyHashtag>
+    </LinkifyUsername>
+  );
 };
 
 export default Linkify;
 
 function LinkifyUrl({ children }: LinkifyProps) {
   return (
-    <LinkifyUsername>
-      <LinkifyHashtag>
-        <LinkItUrl className="text-primary hover:underline">
-          {children}
-        </LinkItUrl>
-      </LinkifyHashtag>
-    </LinkifyUsername>
+    <LinkItUrl className="text-primary hover:underline">{children}</LinkItUrl>
   );
 }
 

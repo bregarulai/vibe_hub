@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import FollowButton from "@/components/FollowButton";
 import { Separator } from "@/components/ui/separator";
 import UserPostsFeed from "@/components/UserPostsFeed";
+import Linkify from "@/components/shared/Linkify";
 
 type ProfilePageProps = {
   params: { username: string };
@@ -122,9 +123,11 @@ async function UserProfile({ user, loggedInUserId }: UserProfileProps) {
       {user.bio && (
         <>
           <Separator />
-          <div className="overflow-hidden whitespace-pre-line break-words">
-            {user.bio}
-          </div>
+          <Linkify>
+            <div className="overflow-hidden whitespace-pre-line break-words">
+              {user.bio}
+            </div>
+          </Linkify>
         </>
       )}
     </div>
