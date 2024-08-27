@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { getUserDataSelect } from "@/lib/type";
+import { UpdateUserProfileValues } from "@/lib/validation";
 
 type getFollowersParams = {
   userId: string;
@@ -123,5 +124,25 @@ export const updateUserAvatar = async ({
     });
   } catch (error) {
     console.error(`Error updating user avatar: ${error}`);
+  }
+};
+
+export const updateUserProfile = async ({
+  userId,
+  values,
+}: {
+  userId: string;
+  values: UpdateUserProfileValues;
+}) => {
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: values,
+      select: getUserDataSelect(userId),
+    });
+
+    return updatedUser;
+  } catch (error) {
+    console.error(`Error updating user profile: ${error}`);
   }
 };
