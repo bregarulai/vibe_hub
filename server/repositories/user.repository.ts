@@ -104,3 +104,24 @@ export const getUserByUsernameWithData = async ({
     return null;
   }
 };
+
+export const updateUserAvatar = async ({
+  userId,
+  newAvatarUrl,
+}: {
+  userId: string;
+  newAvatarUrl: string;
+}) => {
+  try {
+    await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        avatarUrl: newAvatarUrl,
+      },
+    });
+  } catch (error) {
+    console.error(`Error updating user avatar: ${error}`);
+  }
+};
