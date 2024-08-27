@@ -28,3 +28,10 @@ export const createPostSchema = z.object({
 });
 
 export type CreatePostValues = z.infer<typeof createPostSchema>;
+
+export const updateUserProfileSchema = z.object({
+  displayName: requiredString,
+  bio: z.string().max(1000, "Bio must be 1000 characters or less"),
+});
+
+export type UpdateUserProfileValues = z.infer<typeof updateUserProfileSchema>;
