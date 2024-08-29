@@ -50,7 +50,16 @@ const EditProfileDialog = ({
   const updateProfileMutation = useUpdateUserProfileMutation();
 
   const onSubmit = async (values: UpdateUserProfileValues) => {
-    // TODO: Implement update user profile mutation
+    updateProfileMutation.mutate(
+      {
+        values,
+      },
+      {
+        onSuccess: () => {
+          onOpenChange(false);
+        },
+      },
+    );
   };
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
