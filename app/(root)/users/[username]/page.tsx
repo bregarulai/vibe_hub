@@ -10,11 +10,11 @@ import TrendsSidebar from "@/components/shared/TrendsSidebar";
 import UserAvatar from "@/components/shared/UserAvatar";
 import { formatNumber } from "@/lib/utils";
 import FollowerCount from "@/components/shared/FollowerCount";
-import { Button } from "@/components/ui/button";
 import FollowButton from "@/components/FollowButton";
 import { Separator } from "@/components/ui/separator";
 import UserPostsFeed from "@/components/UserPostsFeed";
 import Linkify from "@/components/shared/Linkify";
+import EditProfileButton from "@/components/EditProfileButton";
 
 type ProfilePageProps = {
   params: { username: string };
@@ -115,7 +115,7 @@ async function UserProfile({ user, loggedInUserId }: UserProfileProps) {
           </div>
         </div>
         {user.id === loggedInUserId ? (
-          <Button>Edit Profile</Button>
+          <EditProfileButton user={user} />
         ) : (
           <FollowButton userId={user.id} initialState={followerInfo} />
         )}
