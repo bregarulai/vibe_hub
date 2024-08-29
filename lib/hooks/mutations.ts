@@ -192,6 +192,23 @@ export const useUpdateUserProfileMutation = () => {
           };
         },
       );
+
+      router.refresh();
+
+      toast({
+        description: "Your profile has been successfully updated!",
+      });
+    },
+
+    onError: (error) => {
+      console.error(`Error while updating user profile: ${error}`);
+      toast({
+        variant: "destructive",
+        description:
+          "Something went wrong while updating your profile. Please try again later.",
+      });
     },
   });
+
+  return mutation;
 };
