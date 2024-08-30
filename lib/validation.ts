@@ -25,6 +25,7 @@ export type SignInValues = z.infer<typeof signInSchema>;
 
 export const createPostSchema = z.object({
   content: requiredString,
+  mediaIds: z.array(z.string()).max(5, "Maximum 5 media attachments"),
 });
 
 export type CreatePostValues = z.infer<typeof createPostSchema>;
