@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useUploadThing } from "@/lib/uploadthing";
 
-type Attachment = {
+export type Attachment = {
   file: File;
   mediaId?: string;
   isUploading: boolean;
