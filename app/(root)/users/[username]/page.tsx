@@ -53,7 +53,11 @@ const ProfilePage = async ({ params: { username } }: ProfilePageProps) => {
   const { user: loggedInUser } = await validateRequest();
 
   if (!loggedInUser) {
-    return <p>You&apos;re not authorized to view this page.</p>;
+    return (
+      <p className="text-destructive">
+        You&apos;re not authorized to view this page.
+      </p>
+    );
   }
 
   const user = await getUser(username, loggedInUser.id);
