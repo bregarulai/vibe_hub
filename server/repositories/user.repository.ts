@@ -39,6 +39,38 @@ export const getFollowers = async ({
   }
 };
 
+type GetLikesParams = {
+  postId: string;
+  userId: string;
+};
+
+export const getLikes = async ({ postId, userId }: GetLikesParams) => {
+  try {
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+      select: {
+        likes: {
+          where: {
+            userId,
+          },
+          select: {
+            userId: true,
+          },
+        },
+        _count: {
+          select: {
+            likes: true,
+          },
+        },
+      },
+    });
+
+    return post;
+  } catch (error) {
+    console.error(`Error getting likes: ${error}`);
+  }
+};
+
 export const getWhoToFollow = async (id: string) => {
   try {
     const usersToFollow = await prisma.user.findMany({
