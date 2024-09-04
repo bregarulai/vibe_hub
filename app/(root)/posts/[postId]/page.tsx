@@ -10,6 +10,8 @@ import UserTooltip from "@/components/UserTooltip";
 import Link from "next/link";
 import UserAvatar from "@/components/shared/UserAvatar";
 import { Loader2, User } from "lucide-react";
+import Linkify from "@/components/shared/Linkify";
+import FollowButton from "@/components/FollowButton";
 
 type PostDetailsPageProps = {
   params: {
@@ -40,7 +42,7 @@ export async function generateMetadata({
   const post = await getPost(postId, user.id);
 
   return {
-    title: `${post.user.displayName}: ${post.content.slice(0, 50)}...`,
+    title: `${post.user.displayName} : ${post.content.slice(0, 50)}...`,
   };
 }
 
@@ -92,8 +94,32 @@ async function UserInfoSidebar({ user }: UserInfoSidebarProps) {
           className="flex items-center gap-3"
         >
           <UserAvatar avatarUrl={user.avatarUrl} className="flex-none" />
+          <div>
+            <p className="line-clamp-1 break-all font-semibold hover:underline">
+              {user.displayName}
+            </p>
+            <p className="line-clamp-1 break-all text-muted-foreground">
+              @{user.username}
+            </p>
+          </div>
         </Link>
       </UserTooltip>
+      <Linkify>
+        <div className="line-clamp-6 whitespace-pre-line break-words text-muted-foreground">
+          {user.bio}
+        </div>
+      </Linkify>
+      {user.id !== loggedInUser.id && (
+        <FollowButton
+          userId={user.id}
+          initialState={{
+            followers: user._count.followers,
+            isFollowedByUser: user.followers.some(
+              ({ followerId }) => followerId === loggedInUser.id,
+            ),
+          }}
+        />
+      )}
     </div>
   );
 }
