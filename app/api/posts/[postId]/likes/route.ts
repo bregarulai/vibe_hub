@@ -1,5 +1,6 @@
 import { LikeInfo } from "@/lib/type";
 import { validateRequest } from "@/lucia/auth";
+import { createLike } from "@/server/repositories/like.repository";
 import { getLikes } from "@/server/repositories/user.repository";
 
 export async function GET(
@@ -25,6 +26,28 @@ export async function GET(
     };
 
     return Response.json(data);
+  } catch (error) {
+    console.error(`Error fetching user likes: ${error}`);
+    return Response.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+}
+
+export async function POST(
+  req: Request,
+  { params: { postId } }: { params: { postId: string } },
+) {
+  try {
+    const { user: loggedInUser } = await validateRequest();
+
+    if (!loggedInUser)
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+
+    await createLike({
+      userId: loggedInUser.id,
+      postId,
+    });
+
+    return new Response();
   } catch (error) {
     console.error(`Error fetching user likes: ${error}`);
     return Response.json({ error: "Internal Server Error" }, { status: 500 });
