@@ -6,12 +6,12 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { Heart } from "lucide-react";
 
 import { LikeInfo } from "@/lib/type";
 import { useToast } from "@/components/ui/use-toast";
 import { LIKE_INFO } from "@/lib/constants";
 import kyInstance from "@/lib/ky";
-import { Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type LikeButtonProps = {
@@ -72,7 +72,9 @@ const LikeButton = ({ postId, initialState }: LikeButtonProps) => {
       />
       <span className="text-sm font-medium tabular-nums">
         {data.likes}
-        <span className="hidden sm:inline">likes</span>
+        <span className="hidden sm:inline">
+          {data.likes === 1 ? "like" : "likes"}
+        </span>
       </span>
     </button>
   );
