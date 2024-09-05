@@ -1,11 +1,12 @@
 import prisma from "@/lib/prisma";
+import { getPostDataInclude } from "@/lib/type";
 
-type GetBookmarksParams = {
+type GetBookmarkParams = {
   postId: string;
   userId: string;
 };
 
-export const getBookmark = async ({ postId, userId }: GetBookmarksParams) => {
+export const getBookmark = async ({ postId, userId }: GetBookmarkParams) => {
   try {
     const bookmarks = await prisma.bookmark.findUnique({
       where: {
@@ -23,7 +24,7 @@ export const getBookmark = async ({ postId, userId }: GetBookmarksParams) => {
   }
 };
 
-type CreateBookmarksParams = {
+type CreateBookmarkParams = {
   postId: string;
   userId: string;
 };
@@ -31,7 +32,7 @@ type CreateBookmarksParams = {
 export const createBookmark = async ({
   postId,
   userId,
-}: CreateBookmarksParams) => {
+}: CreateBookmarkParams) => {
   try {
     await prisma.bookmark.upsert({
       where: {
@@ -52,7 +53,7 @@ export const createBookmark = async ({
   }
 };
 
-type DeleteBookmarksParams = {
+type DeleteBookmarkParams = {
   postId: string;
   userId: string;
 };
@@ -60,7 +61,7 @@ type DeleteBookmarksParams = {
 export const deleteBookmark = async ({
   postId,
   userId,
-}: DeleteBookmarksParams) => {
+}: DeleteBookmarkParams) => {
   try {
     await prisma.bookmark.deleteMany({
       where: {
@@ -71,5 +72,40 @@ export const deleteBookmark = async ({
   } catch (error) {
     console.error(`Error deleting bookmark: ${error}`);
     return;
+  }
+};
+
+type GetBookmarksParams = {
+  pageSize: number;
+  cursor?: string;
+  userId: string;
+};
+
+export const getBookmarks = async ({
+  pageSize,
+  cursor,
+  userId,
+}: GetBookmarksParams) => {
+  try {
+    const bookmarks = await prisma.bookmark.findMany({
+      where: {
+        userId,
+      },
+      include: {
+        post: {
+          include: getPostDataInclude(userId),
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: pageSize + 1,
+      cursor: cursor ? { id: cursor } : undefined,
+    });
+
+    return bookmarks;
+  } catch (error) {
+    console.error(`Error getting bookmarks: ${error}`);
+    return [];
   }
 };
