@@ -1,5 +1,3 @@
-"use server";
-
 import prisma from "@/lib/prisma";
 import { getUserDataSelect } from "@/lib/type";
 import { UpdateUserProfileValues } from "@/lib/validation";
