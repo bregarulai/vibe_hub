@@ -7,6 +7,7 @@ export const USER_POSTS = "user-posts";
 export const USER_DATA = "user-data";
 export const LIKE_INFO = "like-info";
 export const BOOKMARK_INFO = "bookmark-info";
+export const BOOKMARKS = "bookmarks";
 
 export enum tabs {
   FOR_YOU = "for-you",
