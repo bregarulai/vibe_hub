@@ -1,4 +1,4 @@
-import BookmarkFeed from "@/components/bookmarks/FollowingFeed";
+import BookmarkFeed from "@/components/bookmarks/BookmarksFeed";
 import TrendsSidebar from "@/components/shared/TrendsSidebar";
 
 export const metadata = {
