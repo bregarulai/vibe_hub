@@ -5,6 +5,7 @@ export const FOLLOWER_INFO = "follower-info";
 export const FOLLOWING = "following";
 export const USER_POSTS = "user-posts";
 export const USER_DATA = "user-data";
+export const LIKE_INFO = "like-info";
 
 export enum tabs {
   FOR_YOU = "for-you",
