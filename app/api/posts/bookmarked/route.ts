@@ -1,7 +1,6 @@
 import { NextRequest } from "next/server";
 
 import { validateRequest } from "@/lucia/auth";
-import { getForYouPosts } from "@/server/repositories/post.repository";
 import { PostsPage } from "@/lib/type";
 import { getBookmarks } from "@/server/repositories/bookmark.repository";
 
