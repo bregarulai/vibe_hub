@@ -28,3 +28,32 @@ export const createComment = async ({
     return null;
   }
 };
+
+type GetCommentsParams = {
+  postId: string;
+  userId: string;
+  cursor: string | null;
+  pageSize: number;
+};
+
+export const getComments = async ({
+  postId,
+  userId,
+  cursor,
+  pageSize,
+}: GetCommentsParams) => {
+  try {
+    const comments = await prisma.comment.findMany({
+      where: { postId },
+      include: getCommentDataInclude(userId),
+      orderBy: { createdAt: "asc" },
+      take: -pageSize - 1,
+      cursor: cursor ? { id: cursor } : undefined,
+    });
+
+    return comments;
+  } catch (error) {
+    console.error(`Error getting comments: ${error}`);
+    return [];
+  }
+};
